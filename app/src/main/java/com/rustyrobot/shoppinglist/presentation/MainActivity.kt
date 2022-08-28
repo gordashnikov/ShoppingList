@@ -1,7 +1,8 @@
-package com.rustyrobot.shoppinglist
+package com.rustyrobot.shoppinglist.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.rustyrobot.shoppinglist.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

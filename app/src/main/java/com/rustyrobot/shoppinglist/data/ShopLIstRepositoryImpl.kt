@@ -1,16 +1,19 @@
 package com.rustyrobot.shoppinglist.data
 
+import androidx.lifecycle.MutableLiveData
 import com.rustyrobot.shoppinglist.domain.ShopItem
 import com.rustyrobot.shoppinglist.domain.ShopListRepository
+import kotlin.random.Random
 
 object ShopLIstRepositoryImpl : ShopListRepository {
 
-    private val shopList = mutableListOf<ShopItem>()
+    private val shopListLD = MutableLiveData<List<ShopItem>>()
+    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
     private var autoIncrementId = 0
 
     init {
-        for(i in 0 until 20) {
-            val item = ShopItem("Name $i", i, true)
+        for (i in 0 until 1000) {
+            val item = ShopItem("Name $i", i, Random.nextBoolean())
             addShopItem(item)
         }
     }
@@ -20,10 +23,12 @@ object ShopLIstRepositoryImpl : ShopListRepository {
             shopItem.id = autoIncrementId++
         }
         shopList.add(shopItem)
+        updateList()
     }
 
     override fun deleteItem(shopItem: ShopItem) {
         shopList.remove(shopItem)
+        updateList()
     }
 
     override fun editShopItem(shopItem: ShopItem) {
@@ -36,5 +41,10 @@ object ShopLIstRepositoryImpl : ShopListRepository {
         ?: throw RuntimeException("Element with id $shopItemId not found")
 
 
-    override fun getShopList() = shopList.toList()
+    override fun getShopList() = shopListLD
+
+    private fun updateList() {
+        shopListLD.value = shopList.toList()
+    }
+
 }
